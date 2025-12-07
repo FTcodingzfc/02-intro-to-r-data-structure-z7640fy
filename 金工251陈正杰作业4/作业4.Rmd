@@ -1,0 +1,44 @@
+#1data.table 是 R 语言中面向大型数据集的高效处理扩展包，兼容 data.frame 操作，具备语法简洁、处理速度快、内存占用低的特点，可通过 as.data.table() 实现数据类型转换，示例：
+library(data.table) 
+kk <- as.data.table(mtcars)
+
+#2读取：fread() 函数支持 .csv、.txt、.tsv、.dat 等格式；保存：fwrite() 函数用于将 data.table 写入外部文件
+# 保存数据
+fwrite(mtcars, "jcs.csv")
+# 读取数据
+jc <- fread("jcs.csv")
+
+#3 i表示行筛选，j表示列操作，by表示分组依据。i可以进行行索引、条件筛选、排序、连接等操作。j可以进行选列、新增列、删除列等操作。by可以进行按单列或多列分组。三者同时存在时运行顺序是先by分组，再i行筛选，最后j列操作。
+
+#4要在data.table中对某个变量进行操作，可以用DT[,变量名],任意引用其中两个变量，并作加法的代码如下：library(data.table)，wat\<-as.data.table(mtcars)，wat[,sum:=mpg+hp]。代码运行后会在wat数据表中加入新的一列。
+
+#5在data.table中行筛选用i来进行，一般给定的数据格式是逻辑向量、整数向量、字符向量。列筛选用j来完成，data.frame格式的语法是DT[,c(1,2)],data.table的格式可以用在dara.table中。
+frame\<-as.data.frame(mtcars)，frame[,c(1,2)]
+
+#6若输出为data.table，可用DT[,.(列名)]，若输出为向量，可以用DT[,列名].选择输出变量，并生成一个向量，
+fff=(c=(wat[,mpg]))
+
+#7可以用order()来进行多个变量的排序，升序为order(列名)，降序为order(-列名)，在i中可以直接用order()排序，j和by则需要结合其他函数，在i中支持同时进行筛选和排序
+w[cyl==4][order(mpg)]
+
+#8在data.table中，添加或更改一列数据，需要使用“：=”这个操作符，如果要添加多列数据，可以用DT[,c("列1","列2":=.(值1，值2))
+
+#9分组操作是将数据集按照一个或多个变量的取值划分为若干子集，再对每个子集独立执行计算或处理的操作。by和keyby的区别在于by分组结果不排序，keyby分组后自动排序。
+library(data.table),jcxy\<-as.data.table(mtcars),czj[,.(smpg=sum(mpg),shp=sum(hp)),by=.(cyl,vs)]
+
+#10在by分组后，用i进行筛选子集，最后用j对分组结果筛选。
+czj[hp\>100,.(smpg=sum(mpg)),by=cyl]
+
+#11.SD在data.table中表示data.table分组当前组的所有行、所有列的子集。单独使用后会生成data.table数据结构，分组后使用会按分组生成list
+
+#12.N是data.table的内置变量，代表当前分组的行数。单独使用时返回整数，分组后使用返回data.table
+。
+
+#13chaining是data.table的链式语法，一般用于简化多步代码.由题可得代码：
+czj[vs==1&am==1][,.(mpg_aver=mean(mpg),cyl_aver=mean(cyl))]
+
+#14要用到的语法用DT1[DT2,on=.(共同变量1，共同变量2)]，有内连接和左连接两种操作方式。内连接仅保存两表匹配的行，左连接保留左表所有行，右表无匹配则填NA
+
+#15如果要进行bind操作需要用到函数rbindlist()
+
+#16melt(宽表转长表)：将宽格式数据转换为长格式数据cast(长表转宽表)：用于将长格式数据转换为宽格式数据，是melt的逆运算
